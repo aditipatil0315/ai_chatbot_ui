@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ChatMessageList from "../components/ui/chat-message-list";
-import Input  from "../components/ui/input";
-import  Button  from "../components/ui/button";
+import Input from "../components/ui/input";
+import Button from "../components/ui/button";
 
 export default function Chatbot() {
   const [messages, setMessages] = useState([]);
@@ -10,25 +10,32 @@ export default function Chatbot() {
   const handleSendMessage = () => {
     if (!input.trim()) return;
 
-    // Add user message to the chat
     const newMessage = { role: "user", content: input };
     setMessages([...messages, newMessage]);
 
-    // Simulate chatbot response (Replace with AI logic later)
     setTimeout(() => {
       const botMessage = { role: "bot", content: "Hello! How can I assist you?" };
-      setMessages([...messages, newMessage, botMessage]);
+      setMessages((prevMessages) => [...prevMessages, botMessage]);
     }, 1000);
 
-    setInput(""); // Clear input field
+    setInput(""); 
   };
 
   return (
     <div className="flex flex-col w-full h-screen p-4 bg-gray-100">
+      {/* Heading */}
+      <h2 className="text-center text-xl font-semibold mb-4">AI-Chatbot</h2>
+
       <div className="flex-1 overflow-y-auto border p-2">
         <ChatMessageList>
           {messages.map((msg, index) => (
-            <div key={index} className={`p-2 rounded ${msg.role === "user" ? "bg-blue-300" : "bg-green-300"}`}>
+            <div
+              key={index}
+              className={`p-2 rounded-md max-w-[75%] ${
+                msg.role === "user" ? "bg-black text-white self-end" : "bg-gray-300 text-black self-start"
+              }`}
+              style={{ width: "fit-content" }}
+            >
               {msg.content}
             </div>
           ))}
