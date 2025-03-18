@@ -48,21 +48,19 @@ export default function Chatbot() {
 
               {/* Message Bubble + Timestamp (Improved Spacing & Width) */}
               <div className="flex flex-col">
-                <div
-                  className={`p-3 rounded-lg text-sm leading-tight ${
-                    msg.role === "user"
-                      ? "bg-black text-white self-end"
-                      : "bg-gray-300 text-black self-start"
-                  }`}
-                  style={{
-                    minWidth: "100px", // Ensures messages are not too narrow
-                    maxWidth: "60%", // Prevents messages from taking full width
-                    textAlign: "left",
-                    wordWrap: "break-word",
-                  }}
-                >
-                  {msg.content}
-                </div>
+              <div
+  className={`p-3 rounded-lg text-sm leading-tight ${
+    msg.role === "user"
+      ? "bg-black text-white self-end"
+      : "bg-gray-300 text-black self-start"
+  }`}
+  style={{
+    width: "fit-content"
+  }}
+>
+  {msg.content}
+</div>
+
                 {/* Timestamp (Aligned Below Message) */}
                 <span
                   className={`text-xs text-gray-500 mt-1 ${
