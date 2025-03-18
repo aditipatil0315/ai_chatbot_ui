@@ -10,33 +10,75 @@ export default function Chatbot() {
   const handleSendMessage = () => {
     if (!input.trim()) return;
 
-    const newMessage = { role: "user", content: input };
+    const newMessage = { role: "user", content: input, time: getCurrentTime() };
     setMessages([...messages, newMessage]);
 
     setTimeout(() => {
-      const botMessage = { role: "bot", content: "Hello! How can I assist you?" };
+      const botMessage = {
+        role: "bot",
+        content: "Hello! How can I assist you?",
+        time: getCurrentTime(),
+      };
       setMessages((prevMessages) => [...prevMessages, botMessage]);
     }, 1000);
 
-    setInput(""); 
+    setInput("");
   };
 
   return (
     <div className="flex flex-col w-full h-screen p-4 bg-gray-100">
       {/* Heading */}
-      <h2 className="text-center text-xl font-semibold mb-4">AI-Chatbot</h2>
+      <h2 className="text-center text-xl font-bold mb-4">AI-Chatbot</h2>
 
       <div className="flex-1 overflow-y-auto border p-2">
         <ChatMessageList>
           {messages.map((msg, index) => (
             <div
               key={index}
-              className={`p-2 rounded-md max-w-[75%] ${
-                msg.role === "user" ? "bg-black text-white self-end" : "bg-gray-300 text-black self-start"
+              className={`flex items-center gap-2 ${
+                msg.role === "user" ? "justify-end" : "justify-start"
               }`}
-              style={{ width: "fit-content" }}
             >
-              {msg.content}
+              {/* AI Profile Icon */}
+              {msg.role === "bot" && (
+                <div className="w-8 h-8 bg-green-700 text-white flex items-center justify-center rounded-full">
+                  A
+                </div>
+              )}
+
+              {/* Message Bubble + Timestamp (Improved Spacing & Width) */}
+              <div className="flex flex-col">
+                <div
+                  className={`p-3 rounded-lg text-sm leading-tight ${
+                    msg.role === "user"
+                      ? "bg-black text-white self-end"
+                      : "bg-gray-300 text-black self-start"
+                  }`}
+                  style={{
+                    minWidth: "100px", // Ensures messages are not too narrow
+                    maxWidth: "60%", // Prevents messages from taking full width
+                    textAlign: "left",
+                    wordWrap: "break-word",
+                  }}
+                >
+                  {msg.content}
+                </div>
+                {/* Timestamp (Aligned Below Message) */}
+                <span
+                  className={`text-xs text-gray-500 mt-1 ${
+                    msg.role === "user" ? "self-end text-right" : "self-start text-left"
+                  }`}
+                >
+                  {msg.time}
+                </span>
+              </div>
+
+              {/* User Profile Icon */}
+              {msg.role === "user" && (
+                <div className="w-8 h-8 bg-blue-700 text-white flex items-center justify-center rounded-full">
+                  U
+                </div>
+              )}
             </div>
           ))}
         </ChatMessageList>
@@ -48,4 +90,14 @@ export default function Chatbot() {
       </div>
     </div>
   );
+}
+
+// Function to get current time in HH:MM AM/PM format
+function getCurrentTime() {
+  const now = new Date();
+  let hours = now.getHours();
+  const minutes = now.getMinutes().toString().padStart(2, "0");
+  const ampm = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12 || 12; // Convert 24-hour to 12-hour format
+  return `${hours}:${minutes} ${ampm}`;
 }
