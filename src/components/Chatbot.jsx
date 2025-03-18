@@ -1,35 +1,44 @@
+import React, { useState } from "react";
 import ChatMessageList from "../components/ui/chat-message-list";
-import { useState } from "react";
+import Input  from "../components/ui/input";
+import  Button  from "../components/ui/button";
 
-const Chatbot = () => {
-  const [messages, setMessages] = useState([
-    { id: "1", content: "Hello! How can I assist you?", sender: "bot" },
-  ]);
+export default function Chatbot() {
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
 
-  const sendMessage = () => {
-    if (input.trim() === "") return;
-    setMessages([...messages, { id: Date.now().toString(), content: input, sender: "user" }]);
-    setInput("");
+  const handleSendMessage = () => {
+    if (!input.trim()) return;
+
+    // Add user message to the chat
+    const newMessage = { role: "user", content: input };
+    setMessages([...messages, newMessage]);
+
+    // Simulate chatbot response (Replace with AI logic later)
+    setTimeout(() => {
+      const botMessage = { role: "bot", content: "Hello! How can I assist you?" };
+      setMessages([...messages, newMessage, botMessage]);
+    }, 1000);
+
+    setInput(""); // Clear input field
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 border p-4 rounded-lg shadow">
-      <ChatMessageList messages={messages} />
-      <div className="mt-4 flex">
-        <input
-          type="text"
-          className="flex-1 border rounded-l p-2"
-          placeholder="Type a message..."
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
-        <button onClick={sendMessage} className="bg-blue-500 text-white px-4 py-2 rounded-r">
-          Send
-        </button>
+    <div className="flex flex-col w-full h-screen p-4 bg-gray-100">
+      <div className="flex-1 overflow-y-auto border p-2">
+        <ChatMessageList>
+          {messages.map((msg, index) => (
+            <div key={index} className={`p-2 rounded ${msg.role === "user" ? "bg-blue-300" : "bg-green-300"}`}>
+              {msg.content}
+            </div>
+          ))}
+        </ChatMessageList>
+      </div>
+
+      <div className="flex gap-2 mt-2">
+        <Input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Type a message..." />
+        <Button onClick={handleSendMessage}>Send</Button>
       </div>
     </div>
   );
-};
-
-export default Chatbot;
+}
